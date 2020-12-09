@@ -1,5 +1,5 @@
 <template>
-  <v-container class="container">
+  <v-container class="card__container">
     <div v-for="trip in trips" :key="trip.id">
       <v-card class="card__item ma-2" nuxt :to="'/itinerary/' + trip.id">
         <v-img
@@ -8,9 +8,11 @@
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.2)"
           height="200px"
         >
-          <v-card-title v-text="trip.city"></v-card-title>
+          <v-card-title v-text="trip.city" class="headline mb-1"></v-card-title>
+          <v-card-text
+            >{{ trip.date_from }} <br />- {{ trip.date_to }}</v-card-text
+          >
         </v-img>
-        <p>{{ trip.date_from }}</p>
       </v-card>
     </div>
   </v-container>
@@ -30,19 +32,23 @@ export default {
 }
 </script>
 <style scoped>
-.container {
+.card__container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 @media screen and (max-width: 768px) {
-  .container {
+  .card__container {
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
 
   .card__image {
     height: 150px !important;
+  }
+
+  .headline {
+    font-size: 16px !important;
   }
 }
 </style>

@@ -1,11 +1,18 @@
 <template>
-  <v-container v-if="trip"> </v-container>
+  <div v-if="trip">
+    <drawer :data="trip"></drawer>
+  </div>
   <div v-else>해당 여행일정은 존재하지 않습니다.</div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import Drawer from '../../components/Drawer.vue'
+
 export default {
-  components: {},
+  components: {
+    Drawer
+  },
   data() {
     return {
       tripId: ''
@@ -13,12 +20,17 @@ export default {
   },
   created() {
     this.tripId = this.$route.params.tripId
+    this.SELECT_TRIP(this.trip)
   },
-  mounted() {},
   computed: {
     trip() {
       return this.$store.state.trips.trips.find(v => v.id == this.tripId)
     }
+  },
+  methods: {
+    ...mapMutations({
+      SELECT_TRIP: 'trips/SELECT_TRIP'
+    })
   }
 }
 </script>

@@ -2,20 +2,20 @@
   <v-app>
     <!-- 툴바 -->
     <nav>
-      <v-toolbar color="grey lighten-4" dense flat>
+      <v-toolbar class="toolbar" color="white" dense flat>
         <v-toolbar-title>
-          <nuxt-link to="/">Travel</nuxt-link>
+          <nuxt-link to="/">Traverse</nuxt-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-text-field label="검색" />
-          <v-btn depressed color="grey lighten-4" text nuxt to="/signup">
+          <v-btn depressed color="white" text nuxt to="/signup">
             <h4>Signup</h4>
           </v-btn>
-          <v-btn depressed color="grey lighten-4" text nuxt to="/login">
+          <v-btn depressed color="white" text nuxt to="/login">
             <h4>Login</h4>
           </v-btn>
-          <v-btn depressed color="grey lighten-4" text nuxt to="">
+          <v-btn depressed color="white" text nuxt to="">
             <h4>Logout</h4>
           </v-btn>
         </v-toolbar-items>
@@ -23,9 +23,7 @@
     </nav>
 
     <!-- 내용 -->
-    <v-container>
-      <nuxt />
-    </v-container>
+    <nuxt />
   </v-app>
 </template>
 
@@ -73,5 +71,13 @@ p {
   line-height: 20px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.toolbar {
+  border-bottom: 1px solid rgb(209, 209, 209) !important;
+}
+
+a {
+  text-decoration: none;
 }
 </style>
