@@ -6,13 +6,11 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "lint": "eslint **/*"
   },
   "dependencies": {
-    "@nuxtjs/vuetify": "0.5.5",
     "@nuxtjs/axios": "^5.3.6",
+    "@nuxtjs/vuetify": "0.5.5",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
@@ -24,9 +22,5 @@
     "prettier": "^1.16.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"
-  },
-  "scripts": {
-    "dev": "nuxt",
-    "lint": "eslint **/*"
   }
 }
