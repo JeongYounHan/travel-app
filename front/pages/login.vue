@@ -59,7 +59,8 @@ export default {
         this.$router.push('/')
       }
     }
-  }
+  },
+  middleware: 'anonymous',
 }
 </script>
 

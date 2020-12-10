@@ -2,20 +2,20 @@
   <v-app>
     <!-- 툴바 -->
     <nav>
-      <v-toolbar class="toolbar" color="white" dense flat>
+      <v-toolbar class="toolbar" dense flat>
         <v-toolbar-title>
           <nuxt-link to="/">Traverse</nuxt-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-text-field label="검색" />
-          <v-btn depressed color="white" text nuxt to="/signup">
+          <v-btn depressed text nuxt to="/signup">
             <h4>Signup</h4>
           </v-btn>
-          <v-btn depressed color="white" text nuxt to="/login">
+          <v-btn depressed text nuxt to="/login">
             <h4>Login</h4>
           </v-btn>
-          <v-btn depressed color="white" text nuxt to="">
+          <v-btn depressed text @click.prevent="logout">
             <h4>Logout</h4>
           </v-btn>
         </v-toolbar-items>
@@ -28,9 +28,20 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
+
 export default {
   data() {
     return {}
+  },
+  methods: {
+    ...mapMutations({
+      LOGOUT: 'users/LOGOUT'
+    }),
+    logout() {
+      this.LOGOUT()
+      this.$router.push('/login')
+    }
   }
 }
 </script>

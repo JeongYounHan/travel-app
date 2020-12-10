@@ -28,7 +28,8 @@ export default {
       me: state => state.users.me,
       trips: state => state.trips.trips
     })
-  }
+  },
+  middleware: 'authenticated',
 }
 </script>
 <style scoped>

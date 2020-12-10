@@ -19,6 +19,7 @@
 import { mapState } from 'vuex'
 import ScheduleList from '../components/ScheduleList'
 
+
 export default {
   components: {
     ScheduleList
@@ -37,6 +38,9 @@ export default {
   mounted() {
     this.calcDays(this.tripSelected)
   },
+  updated() {
+
+  },
   methods: {
     calcDays(tripSelected) {
       const from = tripSelected.date_from
@@ -49,7 +53,7 @@ export default {
       const cDay = 24 * 60 * 60 * 1000 // 시 * 분 * 초 * 밀리세컨
 
       this.days = dif / cDay + 1
-    }
+    },
   }
 }
 </script>
@@ -58,10 +62,11 @@ export default {
 .drawer {
   height: calc(100vh - 49px);
   width: 300px;
+  /* 스크롤 없애기 위해 */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-
+/* 스크롤 없애기 위해 */
 .drawer ::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }

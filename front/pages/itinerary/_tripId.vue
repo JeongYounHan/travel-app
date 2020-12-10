@@ -31,7 +31,8 @@ export default {
     ...mapMutations({
       SELECT_TRIP: 'trips/SELECT_TRIP'
     })
-  }
+  },
+  middleware: 'authenticated',
 }
 </script>
 

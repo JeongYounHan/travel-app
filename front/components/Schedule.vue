@@ -3,14 +3,21 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
         <div
-          class="schedule__btn"
+          class="schedule__div"
           v-if="schedule.div === 'flight'"
           v-bind="attrs"
           v-on="on"
+          :data-schedule-id="schedule.id" 
+          :data-schedule-order="schedule.order"
         >
-          <v-timeline-item color="blue darken-2" small>
-            <strong>{{ schedule.location }}</strong>
-            <br />
+          <v-timeline-item color="blue darken-2" small           
+            v-bind="attrs"
+            v-on="on"
+          >
+            <div class="schedule__delete">
+              <strong>{{ schedule.location }}</strong>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+            </div>
             <strong>{{ schedule.time }}</strong>
             <p class="caption">
               {{ schedule.date }}
@@ -18,17 +25,22 @@
             <p class="caption">
               {{ schedule.memo }}
             </p>
+            <i class="handle fas fa-bars"></i>
           </v-timeline-item>
         </div>
         <div
-          class="schedule__btn"
+          class="schedule__div"
           v-else-if="schedule.div === 'accommodation'"
           v-bind="attrs"
           v-on="on"
+          :data-schedule-id="schedule.id" 
+          :data-schedule-order="schedule.order"
         >
           <v-timeline-item color="pink" small>
-            <strong>{{ schedule.location }}</strong>
-            <br />
+            <div class="schedule__delete">
+              <strong>{{ schedule.location }}</strong>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+            </div>
             <strong>{{ schedule.time }}</strong>
             <p class="caption">
               {{ schedule.date }}
@@ -36,12 +48,18 @@
             <p class="caption">
               {{ schedule.memo }}
             </p>
+            <i class="handle fas fa-bars"></i>
           </v-timeline-item>
         </div>
-        <div class="schedule__btn" v-else v-bind="attrs" v-on="on">
+        <div class="schedule__div" v-else v-bind="attrs" v-on="on"
+          :data-schedule-id="schedule.id" 
+          :data-schedule-order="schedule.order"
+        >
           <v-timeline-item color="teal" small>
-            <strong>{{ schedule.location }}</strong>
-            <br />
+            <div class="schedule__delete">
+              <strong>{{ schedule.location }}</strong>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+            </div>
             <strong>{{ schedule.time }}</strong>
             <p class="caption">
               {{ schedule.date }}
@@ -49,6 +67,7 @@
             <p class="caption">
               {{ schedule.memo }}
             </p>
+            <i class="handle fas fa-bars"></i>
           </v-timeline-item>
         </div>
       </template>
@@ -82,18 +101,27 @@
 </template>
 
 <script>
+
 export default {
   props: ['schedule'],
   data() {
     return {
       dialog: false
     }
+  },
+  methods: {
+    onDelete() {
+      if (!window.confirm(`${this.schedule.location} 일정을 삭제하시겠습니까?`)) {
+        console.log(111111)
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-.schedule__btn {
+.schedule__div {
+  position: relative;
   text-align: left;
   width: 90%;
   height: 100%;
@@ -103,5 +131,24 @@ export default {
 .caption {
   margin: 0px;
   padding: 0px;
+}
+
+.schedule__delete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.schedule__delete__btn {
+  font-size: 20px;
+  color: grey;
+}
+
+.handle {
+  color: grey;
+  position: absolute;
+  top: 55%;
+  left: 176px;
+  font-size: 15px;
 }
 </style>
