@@ -8,14 +8,14 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-text-field label="검색" />
-          <v-btn depressed text nuxt to="/signup">
+          <!-- <v-text-field label="검색" /> -->
+          <v-btn depressed color="transparent" text nuxt to="/signup">
             <h4>Signup</h4>
           </v-btn>
-          <v-btn depressed text nuxt to="/login">
+          <v-btn depressed color="transparent" text nuxt to="/login">
             <h4>Login</h4>
           </v-btn>
-          <v-btn depressed text @click.prevent="logout">
+          <v-btn depressed color="transparent" text @click.prevent="logout">
             <h4>Logout</h4>
           </v-btn>
         </v-toolbar-items>
@@ -51,6 +51,10 @@ export default {
   box-sizing: border-box;
 }
 
+.theme--light.application {
+  background-color: transparent;
+}
+
 h1,
 h2,
 h3,
@@ -84,11 +88,13 @@ p {
   cursor: pointer;
 }
 
-.toolbar {
-  border-bottom: 1px solid rgb(209, 209, 209) !important;
+.v-toolbar {
+  border-bottom: 1px solid rgb(209, 209, 209);
+  background-color: transparent !important;
 }
 
 a {
   text-decoration: none;
 }
+
 </style>

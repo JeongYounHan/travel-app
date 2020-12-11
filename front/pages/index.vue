@@ -22,6 +22,14 @@
 import { mapState } from 'vuex'
 
 export default {
+  head: {
+    script: [
+      {
+        type: 'text/javascript',
+        src: 'https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=29f1degawp'
+      }
+    ]
+  },
   components: {},
   computed: {
     ...mapState({

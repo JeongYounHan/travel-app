@@ -62,6 +62,8 @@ export default {
 .drawer {
   height: calc(100vh - 49px);
   width: 300px;
+  position: fixed;
+  z-index: 1;
   /* 스크롤 없애기 위해 */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

@@ -1,6 +1,7 @@
 <template>
   <div v-if="trip">
-    <drawer :data="trip"></drawer>
+    <Drawer></Drawer>
+    <Map></Map>
   </div>
   <div v-else>해당 여행일정은 존재하지 않습니다.</div>
 </template>
@@ -8,10 +9,12 @@
 <script>
 import { mapMutations } from 'vuex'
 import Drawer from '../../components/Drawer.vue'
+import Map from '../../components/Map.vue'
 
 export default {
   components: {
-    Drawer
+    Drawer,
+    Map
   },
   data() {
     return {
@@ -36,4 +39,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>
