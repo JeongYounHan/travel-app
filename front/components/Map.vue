@@ -92,7 +92,7 @@ export default {
 
             marker.set('seq', i);
             markerList.push(marker);
-            console.log(marker)
+            // console.log(marker)
 
         }
     }

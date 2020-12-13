@@ -22,6 +22,9 @@ export default {
     }
   },
   created() {
+
+  },
+  mounted() {
     this.tripId = this.$route.params.tripId
     this.SELECT_TRIP(this.trip)
   },

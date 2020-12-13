@@ -20,16 +20,18 @@
             </template>
             <v-card>
             <v-card-title>
-                <span class="headline">여행을 떠나볼까요?</span>
+                <h1 class="ml-2 mt-2">여행을 떠나볼까요?</h1>
             </v-card-title>
             <v-card-text>
-                <v-container>
+                <v-container class="pt-0">
                     <v-text-field
+                        v-model="name"
                         label="여행의 이름을 정해주세요."
                     ></v-text-field>
                     <v-select
-                        :items="['0-17', '18-29', '30-54', '54+']"
-                        label="여행하는 도시는 어디인가요?*"
+                        :items="citiesName"
+                        label="여행하는 도시는 어디인가요?"
+                        v-model="city"
                         required
                     ></v-select>
                     <br />
@@ -46,23 +48,21 @@
                             width="250"
                         ></v-date-picker>
                     </div>
-                    {{date1}}, {{date2}}
                 </v-container>
-                <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
-                color="blue darken-1"
+                outlined
                 text
-                @click="dialog = false"
+                @click.prevent="dialog = false"
                 >
                 Close
                 </v-btn>
                 <v-btn
-                color="blue darken-1"
+                outlined
                 text
-                @click="dialog = false"
+                @click.prevent="onSubmit"
                 >
                 Save
                 </v-btn>
@@ -75,15 +75,49 @@
 <script>
 import Datetime from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
+import {mapState, mapActions} from 'vuex'
 
-
-  export default {
-    data: () => ({
-      dialog: false,
-      date1: '',
-      date2: '',
-    }),
-  }
+export default {
+    data() {
+        return {
+            dialog: false,
+            name: '',
+            city: '',
+            date1: '',
+            date2: '',
+            citiesName: [],
+        }
+    },
+    computed: {
+        ...mapState({
+            cities: state => state.trips.cities
+        }),
+    },
+    created() {
+        this.changeCityIntoName()
+    },
+    methods: {
+        ...mapActions({
+            ADD_TRIP: 'trips/ADD_TRIP',
+        }),
+        onSubmit() {
+            this.ADD_TRIP({
+                city: this.city,
+                name: this.name,
+                date_from: this.date1,
+                date_to: this.date2
+            })
+            this.dialog = false
+        },
+        changeCityIntoName() {
+            const name = []
+            this.cities.forEach(item => {
+                name.push(item.name)
+            })
+            this.citiesName = name
+        }
+    }
+}
 </script>
 <style>
 .dialog__container {

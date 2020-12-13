@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on, attrs }">
         <div
           class="schedule__div"
-          v-if="schedule.div === 'flight'"
+          v-if="schedule.place.div === 'flight'"
           v-bind="attrs"
           v-on="on"
           :data-schedule-id="schedule.id" 
@@ -15,13 +15,10 @@
             v-on="on"
           >
             <div class="schedule__delete">
-              <strong>{{ schedule.location }}</strong>
+              <strong>{{ schedule.place.name }}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
             </div>
-            <strong>{{ schedule.time }}</strong>
-            <p class="caption">
-              {{ schedule.date }}
-            </p>
+            <small>{{ schedule.place.time }}</small>
             <p class="caption">
               {{ schedule.memo }}
             </p>
@@ -38,13 +35,10 @@
         >
           <v-timeline-item color="pink" small>
             <div class="schedule__delete">
-              <strong>{{ schedule.location }}</strong>
+              <strong>{{ schedule.place.name }}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
             </div>
-            <strong>{{ schedule.time }}</strong>
-            <p class="caption">
-              {{ schedule.date }}
-            </p>
+            <small>숙소</small>
             <p class="caption">
               {{ schedule.memo }}
             </p>
@@ -57,12 +51,12 @@
         >
           <v-timeline-item color="teal" small>
             <div class="schedule__delete">
-              <strong>{{ schedule.location }}</strong>
+              <strong>{{ schedule.place.name}}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
             </div>
-            <strong>{{ schedule.time }}</strong>
+            <small>관광명소</small>
             <p class="caption">
-              {{ schedule.date }}
+              {{ schedule.place.time.slice(0, 23)+'...' }}
             </p>
             <p class="caption">
               {{ schedule.memo }}
@@ -71,17 +65,23 @@
           </v-timeline-item>
         </div>
       </template>
+      <!-- 다이얼로그 부분 -->
       <v-card>
         <v-card-title>
-          <span class="headline">일정 수정</span>
+          <span class="headline">일정 상세 & 수정</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field label="메모" required></v-text-field>
-            <v-text-field
-              label="시간"
-              hint="example of helper text only on focus"
-            ></v-text-field>
+            <p class="caption mt-2">
+              설명: {{ schedule.place.description }}
+            </p>
+            <p class="caption mt-2">
+              입장료: {{ schedule.place.price }}
+            </p>
+            <p class="caption mt-2">
+              운영시간: {{ schedule.place.time }}
+            </p>
+            <v-text-field class="mt-3" label="메모" required></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>

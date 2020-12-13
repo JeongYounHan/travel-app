@@ -14,7 +14,7 @@
       </v-timeline>
       <div class="btnList">
         <v-btn small class="scheduleList__btn" flat>장소 추가</v-btn>
-        <v-btn small class="scheduleList__btn" flat>메모 추가</v-btn>
+        <v-btn small class="scheduleList__btn" flat>할일 추가</v-btn>
       </div>
       <div ref="to"></div>
     </v-card>

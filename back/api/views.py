@@ -51,8 +51,17 @@ class TripViewSet(viewsets.ModelViewSet):
     pagination_class = SmallPagination
     queryset = Trip.objects.all()
 
-    @action(methods=['POST'], detail=False, url_path="post")
-    def trip_post(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        serializer_class = TripSerializer
+        if request.user.is_anonymous:
+            raise NotAuthenticated("로그인 먼저 해주세요")
+        else:
+            trip = Trip.objects.filter(user=user)
+            serializer = serializer_class(trip, many=True)
+            return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
         user = request.user
         serializer_class = TripSerializer
 
@@ -72,7 +81,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
 
     # 해당 trip의 전체리스트
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         serializer_class = ScheduleSerializer
         queryset = Schedule.objects.all()
         user = request.user
@@ -80,7 +89,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
             raise NotAuthenticated("로그인 먼저 해주세요")
         else:
             day = self.request.query_params.get('day', None)
-            trip_name = request.data.get('trip')
+            trip_name = self.request.query_params.get('trip')
             trip = Trip.objects.get(pk=trip_name)
 
             if day:
