@@ -13,7 +13,7 @@
 
       </v-timeline>
       <div class="btnList">
-        <v-btn small class="scheduleList__btn" flat>장소 추가</v-btn>
+        <DialogFormSchedule :dayEach="day" :daySchedule="daySchedule"></DialogFormSchedule>
         <v-btn small class="scheduleList__btn" flat>할일 추가</v-btn>
       </div>
       <div ref="to"></div>
@@ -22,14 +22,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Schedule from '../components/Schedule'
+import DialogFormSchedule from '../components/DialogFormSchedule'
 import dragula from 'dragula'
 import 'dragula/dist/dragula.css'
 
 export default {
   components: {
-    Schedule
+    Schedule,
+    DialogFormSchedule
   },
   props: ['day'],
   data() {
@@ -37,10 +39,23 @@ export default {
   },
   computed: {
     daySchedule() {
-      return this.$store.state.trips.scheduleList.filter(v => v.day == this.day)
+      let temp = this.$store.state.trips.scheduleList.filter(v => v.day == this.day)
+      // order 순서별로 정렬
+      return temp.sort((a, b) => {
+        if (a.order > b.order) {
+          return 1
+        }
+        if (a.order < b.order) {
+          return -1
+        } 
+        return 0       
+      })
     }
   },
+  created() {
+  },
   mounted() {
+    // 드래그 앤 드롭
     const { from, to } = this.$refs;
     dragula([from], {
       revertOnSpill: true,
@@ -68,37 +83,41 @@ export default {
           break;
         }
       }
-      console.log(prev, next)
+      console.log("전후", prev, next)
       // 전, 후 일정 order 값 기준으로 타겟 일정 order값 계산
       const targetSchedule = {
         id: cur,
-        order: 0
+        order: 0,
+        day: el.getElementsByClassName('schedule__div')[0].dataset['scheduleDay']
       }
 
       if (!prev && next) {
-        targetSchedule.order = parseFloat(next.dataset['scheduleOrder']) / 2
+        targetSchedule.order = parseFloat(next.dataset['scheduleOrder']) - 1
       }
       else if (!next && prev) {
-        targetSchedule.order = parseFloat(prev.dataset['scheduleOrder']) * 2
+        targetSchedule.order = parseFloat(prev.dataset['scheduleOrder']) + 1
       } 
       else if (prev && next) {
         targetSchedule.order = (parseFloat(prev.dataset['scheduleOrder']) + parseFloat(next.dataset['scheduleOrder'])) / 2 
       } 
 
       // 수정해주어야
+      this.UPDATE_SCHEDULE(targetSchedule)
     });
   },
   updated() {
  
   },
   methods: {
+    ...mapMutations({
+      SET_DAY: 'trips/SET_DAY'
+    }),
+    ...mapActions({
+      UPDATE_SCHEDULE: 'trips/UPDATE_SCHEDULE'
+    })
   }
 }
 </script>
 
 <style>
-.scheduleList__btn {
-  border: 1px solid grey;
-  padding: 0 32px;
-}
 </style>

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import ScheduleList from '../components/ScheduleList'
 
 
@@ -47,6 +47,9 @@ export default {
 
   },
   methods: {
+    ...mapMutations({
+      SET_DAYSTOTAL: 'trips/SET_DAYSTOTAL'
+    }),
     ...mapActions({
       FETCH_SCHEDULELIST: 'trips/FETCH_SCHEDULELIST'
     }),
@@ -61,6 +64,7 @@ export default {
       const cDay = 24 * 60 * 60 * 1000 // 시 * 분 * 초 * 밀리세컨
       
       this.days = dif / cDay + 1
+      this.SET_DAYSTOTAL(this.days)
     },
   }
 }

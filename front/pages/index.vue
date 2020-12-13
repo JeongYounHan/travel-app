@@ -46,11 +46,13 @@ export default {
   created() {
     this.FETCH_TRIPLIST()
     this.FETCH_CITYLIST()
+    this.FETCH_PLACELIST()
   },
   methods: {
       ...mapActions({
           FETCH_TRIPLIST: 'trips/FETCH_TRIPLIST',
-          FETCH_CITYLIST: 'trips/FETCH_CITYLIST'
+          FETCH_CITYLIST: 'trips/FETCH_CITYLIST',
+          FETCH_PLACELIST: 'trips/FETCH_PLACELIST'
       })
   },
   middleware: 'authenticated',

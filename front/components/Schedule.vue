@@ -9,11 +9,9 @@
           v-on="on"
           :data-schedule-id="schedule.id" 
           :data-schedule-order="schedule.order"
+          :data-schedule-day="schedule.day"
         >
-          <v-timeline-item color="blue darken-2" small           
-            v-bind="attrs"
-            v-on="on"
-          >
+          <v-timeline-item color="blue darken-2" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name }}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
@@ -32,8 +30,9 @@
           v-on="on"
           :data-schedule-id="schedule.id" 
           :data-schedule-order="schedule.order"
+          :data-schedule-day="schedule.day"
         >
-          <v-timeline-item color="pink" small>
+          <v-timeline-item color="pink" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name }}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
@@ -48,8 +47,9 @@
         <div class="schedule__div" v-else v-bind="attrs" v-on="on"
           :data-schedule-id="schedule.id" 
           :data-schedule-order="schedule.order"
+          :data-schedule-day="schedule.day"
         >
-          <v-timeline-item color="teal" small>
+          <v-timeline-item color="teal" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name}}</strong>
               <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
@@ -72,15 +72,17 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <p class="caption mt-2">
-              설명: {{ schedule.place.description }}
-            </p>
-            <p class="caption mt-2">
-              입장료: {{ schedule.place.price }}
-            </p>
-            <p class="caption mt-2">
-              운영시간: {{ schedule.place.time }}
-            </p>
+            <div v-if="schedule.place">
+              <p class="caption mt-2">
+                설명: {{ schedule.place.description }}
+              </p>
+              <p class="caption mt-2">
+                가격: {{ schedule.place.price }}
+              </p>
+              <p class="caption mt-2">
+                시간: {{ schedule.place.time }}
+              </p>
+            </div>
             <v-text-field class="mt-3" label="메모" required></v-text-field>
           </v-container>
         </v-card-text>
@@ -95,8 +97,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- 추가 버튼 -->
   </div>
 </template>
 

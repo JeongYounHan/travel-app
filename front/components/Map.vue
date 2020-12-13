@@ -8,12 +8,12 @@
       <v-navigation-drawer class="daysNav__container" floating permanent>
         <v-list dense rounded>
           <span
-            v-for="item in items"
-            :key="item.title"
+            v-for="item in daysTotal"
+            :key="item"
             link
           >
-            <v-chip class="ma-1" small>
-                day{{item}}
+            <v-chip class="ma-1" small @click="onClickDay(item)">
+                day {{item}}
             </v-chip>
           </span>
         </v-list>
@@ -23,78 +23,82 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data() {
     return {
         mapOptions: {},
         map: '',
-        items: [
-            1, 2, 3, 4, 5, 6
-        ],
+        day: 1,
     }
   },
   computed: {
     ...mapState({
-      scheduleList: state => state.trips.scheduleList
-    })
+      scheduleList: state => state.trips.scheduleList,
+      daysTotal: state => state.trips.daysTotal,
+      tripSelected: state => state.trips.tripSelected.id,
+      daySchedule: state => state.trips.daySchedule
+    }),
+    dailySchedule() {
+      return this.scheduleList.filter(v => v.day == this.day)
+    }
   },
   mounted() {
-      this.setMap()
+      this.onClickDay(1)
   },
   methods: {
-    setMap() {
+    ...mapActions({
+      FETCH_DAYSCHEDULE: 'trips/FETCH_DAYSCHEDULE'
+    }),
+    async onClickDay(item) {
+        this.day = item
+        console.log(this.dailySchedule)
+        
+        //데이터 받아오기
+        // const temp = await this.fetchDaySchedule(item)
         //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정합니다.
         const mapDiv = document.getElementById('map'); // 'map'으로 선언해도 동일
-
+        
+        let middleLat = 0
+        let middleLng = 0
+        let latlng = []
+        // 해당 장소들 좌표 뽑기
+        this.dailySchedule.forEach(element => {
+          middleLat = middleLat + element.place.lat
+          middleLng = middleLng + element.place.lng
+          let temp = new naver.maps.LatLng(element.place.lat, element.place.lng)
+          latlng.push(temp)
+        });
+        const tempLength = Object.keys(this.dailySchedule).length
+        if (tempLength) {
+          middleLat = middleLat / tempLength
+          middleLng = middleLng / tempLength
+        } else {
+          middleLat = 37.3614483
+          middleLng = 129.1114883
+        }
         //옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성됩니다.
         const map = new naver.maps.Map(mapDiv, {
-            zoom: 16,
-            center: new naver.maps.LatLng(37.3614483, 129.1114883)
+            zoom: 15,
+            center: new naver.maps.LatLng(middleLat, middleLng)
         });
 
-        // 마커찍기
-        var latlngs = [
-            new naver.maps.LatLng(37.3633324, 129.1054988),
-            new naver.maps.LatLng(37.3632916, 129.1085015),
-            new naver.maps.LatLng(37.3632507, 129.1115043),
-            new naver.maps.LatLng(37.3632097, 129.114507),
-            new naver.maps.LatLng(37.3631687, 129.1175097),
-            new naver.maps.LatLng(37.3597282, 129.105422),
-            new naver.maps.LatLng(37.3596874, 129.1084246),
-            new naver.maps.LatLng(37.3596465, 129.1114272),
-            new naver.maps.LatLng(37.3596056, 129.1144298),
-            new naver.maps.LatLng(37.3595646, 129.1174323)
-        ]
-
         const markerList = []
-        for (let i=0, ii=latlngs.length; i<ii; i++) {
+        for (let i=0, ii=latlng.length; i<ii; i++) {
 
             let marker = new naver.maps.Marker({
-                position: latlngs[i],
-                map: map,
-                // icon: {
-                //     content: [
-                //         '<div class="cs_mapbridge">',
-                //             '<div class="map_group _map_group crs">',
-                //                 '<div class="map_marker _marker num1 num1_big"> ',
-                //                     '<span class="ico _icon"></span>',
-                //                     '<span class="shd"></span>',
-                //                 '</div>',
-                //             '</div>',
-                //         '</div>'
-                //     ].join(''),
-                //     size: new naver.maps.Size(38, 58),
-                //     anchor: new naver.maps.Point(19, 58),
-                // },            
+                position: latlng[i],
+                map: map,           
             });
 
             marker.set('seq', i);
             markerList.push(marker);
             // console.log(marker)
-
         }
+    },
+    fetchDaySchedule(item) {
+      this.FETCH_DAYSCHEDULE({day: item, trip: this.tripSelected})
     }
   }
 }
