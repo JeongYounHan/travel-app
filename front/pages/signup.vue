@@ -1,6 +1,6 @@
 <template>
-  <div class="login">
-    <h2>Login</h2>
+  <div class="signup">
+    <h2>Signup</h2>
     <v-form v-model="valid" @submit.prevent="onSubmit">
       <v-text-field
         class="form"
@@ -14,6 +14,15 @@
       />
       <v-text-field
         class="form"
+        v-model="email"
+        label="이메일"
+        type="email"
+        placeholder="example@example.com"
+        :rules="emailRules"
+        required
+      />
+      <v-text-field
+        class="form"
         label="비밀번호"
         type="password"
         v-model="password"
@@ -21,8 +30,17 @@
         required
         :rules="passwordRules"
       />
+      <v-text-field
+        class="form"
+        label="비밀번호 확인"
+        type="password"
+        v-model="password2"
+        placeholder="12345678"
+        required
+        :rules="password2Rules"
+      />
       <v-btn class="btn" type="submit" :disabled="!valid">
-        로그인
+        회원가입
       </v-btn>
     </v-form>
   </div>
@@ -36,11 +54,21 @@ export default {
     return {
       valid: false,
       username: '',
+      email: '',
       password: '',
+      password2: '',
       usernameRules: [
         v => !!v || '아이디는 필수입니다.',
       ],
-      passwordRules: [v => !!v || '비밀번호는 필수입니다.']
+      emailRules: [
+          v => !!v || '이메일은 필수입니다.',
+          v => /.+@.+/.test(v) || '이메일이 유효하지 않습니다.'
+      ],
+      passwordRules: [v => !!v || '비밀번호는 필수입니다.'],
+      password2Rules: [
+        v => !!v || '비밀번호 확인은 필수입니다.',
+        v => v == this.password || '비밀번호가 같지 않습니다.' 
+      ]
     }
   },
 
@@ -57,24 +85,18 @@ export default {
       // SET_ME: 'users/SET_ME'
     }),
     ...mapActions({
-      LOGIN: 'users/LOGIN'
+      SIGNUP: 'users/SIGNUP'
     }),
     onSubmit() {
-      this.LOGIN({username: this.username, password: this.password})
+      this.SIGNUP({username: this.username, email: this.email, password1: this.password, password2: this.password2})
     },
-    checkToken() {
-      const token = this.$cookies.get('token')
-      if (token) {
-        this.$store.commit('users/LOGIN', token)
-      }
-    }
   },
   middleware: 'anonymous',
 }
 </script>
 
 <style>
-.login {
+.signup {
   width: 60%;
   margin: 0 auto;
 }

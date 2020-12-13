@@ -1,5 +1,5 @@
 export default function({ store, redirect }) {
-    if (!store.state.users.me) {
+    if (!store.state.users.token) {
         redirect('/login');
     }
 }

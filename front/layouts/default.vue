@@ -9,13 +9,13 @@
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <!-- <v-text-field label="검색" /> -->
-          <v-btn depressed color="transparent" text nuxt to="/signup">
+          <v-btn v-if="!me" depressed color="transparent" text nuxt to="/signup">
             <h4>Signup</h4>
           </v-btn>
-          <v-btn depressed color="transparent" text nuxt to="/login">
+          <v-btn v-if="!me" depressed color="transparent" text nuxt to="/login">
             <h4>Login</h4>
           </v-btn>
-          <v-btn depressed color="transparent" text @click.prevent="logout">
+          <v-btn v-if="me" depressed color="transparent" text @click.prevent="logout">
             <h4>Logout</h4>
           </v-btn>
         </v-toolbar-items>
@@ -24,23 +24,32 @@
 
     <!-- 내용 -->
     <nuxt />
+
   </v-app>
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapState, mapActions} from 'vuex'
+
 
 export default {
+  components:{
+
+  },
   data() {
     return {}
   },
+  computed: {
+    ...mapState({
+      me: state => state.users.me
+    })
+  },
   methods: {
-    ...mapMutations({
+    ...mapActions({
       LOGOUT: 'users/LOGOUT'
     }),
     logout() {
       this.LOGOUT()
-      this.$router.push('/login')
     }
   }
 }
