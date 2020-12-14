@@ -1,5 +1,24 @@
 <template>
   <div class="index">
+    <div class="main">
+      <v-img
+        max-height="510"
+        src="https://cdn.pixabay.com/photo/2016/01/09/18/27/journey-1130732_1280.jpg"
+      >
+      <div class="search">
+        <h1>Enjoy Your Dream Vacation</h1>
+        <h4>일상 속 작은 행복, 국내 여행을 떠나보아요</h4>
+        <div class="search__container">
+          <input
+            class="search__form"
+            placeholder="검색"
+          />
+          <button>SEARCH</button>
+        </div>
+      </div>
+      </v-img>
+    </div>
+    <h1 class="recentTrip">Recent Trip</h1>
     <v-container class="card__container" v-if="trips">
       <div v-for="trip in trips" :key="trip.id">
         <v-card class="card__item ma-2" nuxt :to="'/itinerary/' + trip.id">
@@ -59,9 +78,53 @@ export default {
 }
 </script>
 <style scoped>
+.index h1 {
+  text-align: center;
+  margin-top: 45px;
+}
+
+.search h1{
+  color: white;
+  margin-top: 100px !important;
+  padding: 0px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.search h4{
+  color: white;
+  margin-top: 0px !important;
+  padding: 0px;
+  text-align: center;
+  margin-top: 40px;
+}
+
 .card__container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.search__container{
+  text-align: center;
+  margin-top: 180px;
+}
+
+.search__form {
+  width: 70%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  display: inline;
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  transition: all 0.3s;
+}
+
+button {
+  background-color: rgb(13, 160, 160);
+  border-radius: 15px;
+  color: white;
+  padding: 6px 5px;
+  display: inline;
 }
 
 @media screen and (max-width: 768px) {

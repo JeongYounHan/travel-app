@@ -14,7 +14,7 @@
       </v-timeline>
       <div class="btnList">
         <DialogFormSchedule :dayEach="day" :daySchedule="daySchedule"></DialogFormSchedule>
-        <v-btn small class="scheduleList__btn" flat>할일 추가</v-btn>
+        <DialogFormTodo :dayEach="day"></DialogFormTodo>
       </div>
       <div ref="to"></div>
     </v-card>
@@ -25,13 +25,15 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 import Schedule from '../components/Schedule'
 import DialogFormSchedule from '../components/DialogFormSchedule'
+import DialogFormTodo from '../components/DialogFormTodo'
 import dragula from 'dragula'
 import 'dragula/dist/dragula.css'
 
 export default {
   components: {
     Schedule,
-    DialogFormSchedule
+    DialogFormSchedule,
+    DialogFormTodo
   },
   props: ['day'],
   data() {
@@ -120,4 +122,8 @@ export default {
 </script>
 
 <style>
+.btnList {
+  display: flex;
+  justify-content: space-around;
+}
 </style>

@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on, attrs }">
         <div
           class="schedule__div"
-          v-if="schedule.place.div === 'flight'"
+          v-if="schedule.place.div === 'transportation'"
           v-bind="attrs"
           v-on="on"
           :data-schedule-id="schedule.id" 
@@ -25,7 +25,7 @@
         </div>
         <div
           class="schedule__div"
-          v-else-if="schedule.div === 'accommodation'"
+          v-else-if="schedule.place.div === 'accommodation'"
           v-bind="attrs"
           v-on="on"
           :data-schedule-id="schedule.id" 
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     onDelete() {
-      if (!window.confirm(`${this.schedule.location} 일정을 삭제하시겠습니까?`)) {
+      if (!window.confirm(`${this.schedule.place.name} 일정을 삭제하시겠습니까?`)) {
         console.log(111111)
       }
     }

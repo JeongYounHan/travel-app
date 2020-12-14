@@ -23,7 +23,7 @@
                 <h1 class="ml-2 mt-2">여행을 떠나볼까요?</h1>
             </v-card-title>
             <v-card-text>
-                <v-container class="pt-0">
+                <v-container class="pt-0" v-if="citiesName">
                     <v-text-field
                         v-model="name"
                         label="여행의 이름을 정해주세요."
@@ -85,16 +85,23 @@ export default {
             city: '',
             date1: '',
             date2: '',
-            citiesName: [],
+
         }
     },
     computed: {
         ...mapState({
             cities: state => state.trips.cities
         }),
+        citiesName() {
+            let name = []
+            this.cities.forEach(item => {
+                name.push(item.name)
+            })
+            return name
+        }
     },
-    created() {
-        this.changeCityIntoName()
+    mounted() {
+        // this.changeCityIntoName()
     },
     methods: {
         ...mapActions({
@@ -109,13 +116,13 @@ export default {
             })
             this.dialog = false
         },
-        changeCityIntoName() {
-            const name = []
-            this.cities.forEach(item => {
-                name.push(item.name)
-            })
-            this.citiesName = name
-        }
+        // changeCityIntoName() {
+        //     const name = []
+        //     this.cities.forEach(item => {
+        //         name.push(item.name)
+        //     })
+        //     this.citiesName = name
+        // }
     }
 }
 </script>

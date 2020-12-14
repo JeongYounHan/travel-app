@@ -7,26 +7,20 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          flat
+        flat
           class="addSchedule__btn"
           v-bind="attrs"
           v-on="on"
         >
-          장소 추가
+          할일 추가
         </v-btn>
       </template>
       <v-card>
         <v-card-title>
-          <h1>장소 추가</h1>
+          <h1>할일 추가</h1>
         </v-card-title>
         <v-card-text>
           <v-container class="pt-0">
-            <v-select
-                :items="placesName"
-                label="어떤 장소를 가고 싶으신가요?"
-                v-model="place"
-                required
-            ></v-select>
             <v-text-field
                 label="간단한 메모를 적으셔도 됩니다."
                 v-model="memo"
@@ -71,13 +65,6 @@ export default {
             tripSelected: state => state.trips.tripSelected.id,
             placeList: state => state.trips.placeList
         }),
-        placesName() {
-            let name = []
-            this.placeList.forEach(item => {
-                name.push(item.name)
-            })
-            return name
-        }
     },
     created() {
         // this.changePlaceIntoName()
@@ -98,16 +85,6 @@ export default {
             this.ADD_SCHEDULE({trip: this.tripSelected, place: this.place, day: this.dayEach, order: order, memo: this.memo})
             this.dialog = false
         },
-        calcMaxOrder() {
-            let maxOrder = 457888
-            this.daySchedule.forEach(item => {
-                if (item.order > maxOrder) {
-                    maxOrder = item.order
-                }
-            })
-            maxOrder = maxOrder + 1
-            return maxOrder
-        }
     },
 }
 </script>
@@ -116,9 +93,5 @@ export default {
     display: inline;
 }
 
-.addSchedule__btn{
-  border: 1px solid grey;
-  padding: 0 25px;
-}
 </style>
 

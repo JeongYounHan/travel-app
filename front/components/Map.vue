@@ -75,12 +75,12 @@ export default {
           middleLat = middleLat / tempLength
           middleLng = middleLng / tempLength
         } else {
-          middleLat = 37.3614483
-          middleLng = 129.1114883
+          middleLat = 37.56664532365792
+          middleLng = 126.97793969616743
         }
         //옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성됩니다.
         const map = new naver.maps.Map(mapDiv, {
-            zoom: 15,
+            zoom: 14,
             center: new naver.maps.LatLng(middleLat, middleLng)
         });
 
