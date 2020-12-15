@@ -12,7 +12,7 @@
             :key="item"
             link
           >
-            <v-chip class="ma-1" small @click="onClickDay(item)">
+            <v-chip class="ma-1" small @click.prevent="onClickChip(item)" @click="onClickDay(item)">
                 day {{item}}
             </v-chip>
           </span>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   data() {
@@ -42,14 +42,20 @@ export default {
     }),
   },
   watch: {
-    daySchedule() {
-      this.fetchMap()
+    daySchedule: {
+      deep: true,
+      handler() {
+        this.fetchMap()
+      }
     }
   },
   mounted() {
       this.onClickDay(1)
   },
   methods: {
+    ...mapMutations({
+      SET_DAYSCROLL: 'trips/SET_DAYSCROLL'
+    }),
     ...mapActions({
       FETCH_DAYSCHEDULE: 'trips/FETCH_DAYSCHEDULE'
     }),
@@ -105,8 +111,6 @@ export default {
         }
         minLat = minLat - 0.1
         minLng = minLng - 0.1
-        console.log(minLat, minLng)
-        console.log(maxLat, maxLng)
         // 옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성
         // 모든 점들 다 들어오게 하려면 바운더리 설정 필요
         let maxBoundary = new naver.maps.LatLngBounds(
@@ -150,6 +154,9 @@ export default {
               markerList2.push(marker2);
           }   
         }   
+    },
+    onClickChip(item) {
+      this.SET_DAYSCROLL(item)
     }
   }
 }
@@ -168,9 +175,9 @@ export default {
 
 .daysNav {
     position: absolute;
-    bottom: 10px;
-    left: 290px;
-    z-index: 2;
+    bottom: 5px;
+    left: 6px;
+    z-index: 9999;
     border-radius: 5px;
 }
 

@@ -40,6 +40,9 @@ export default {
     return {}
   },
   computed: {
+    ...mapState({
+      
+    }),
     daySchedule() {
       let temp = this.$store.state.trips.scheduleList.filter(v => v.day == this.day)
       // order 순서별로 정렬
@@ -54,6 +57,7 @@ export default {
       })
     }
   },
+
   created() {
   },
   mounted() {

@@ -7,7 +7,7 @@ export const state = () => ({
     daySelected: {},
     daysTotal: 0,
     daySchedule: [],
-    dayScroll: 0,
+    dayScroll: 1,
 });
 
 export const mutations = {
@@ -124,7 +124,6 @@ export const actions = {
             })
     },
     UPDATE_SCHEDULE({dispatch, rootState}, payload) {
-        console.log(payload)
         const config = {
             headers: {
                 Authorization: 'Token ' + rootState.users.token
@@ -150,7 +149,6 @@ export const actions = {
         const day = payload.day || ''
         return this.$axios.get(`${BACK_URL}/schedules?trip=${payload.trip}&day=${day}`, config)
             .then((res) => {
-                console.log(res.data)
                 commit('SET_DAYSCHEDULE', res.data)
             }).catch((err) => {
                 console.log(err)

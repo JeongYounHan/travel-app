@@ -10,7 +10,7 @@
       </div>
       <v-divider></v-divider>
       <div v-if="scheduleList">
-        <ScheduleList v-for="day in days" :key="day" :day="day" class="mb-5"/>
+        <ScheduleList :ref="`day${day}`" v-for="day in days" :key="day" :day="day" class="mb-5"/>
       </div>
     </v-navigation-drawer>
   </div>
@@ -33,7 +33,8 @@ export default {
   computed: {
     ...mapState({
       tripSelected: state => state.trips.tripSelected,
-      scheduleList: state => state.trips.scheduleList
+      scheduleList: state => state.trips.scheduleList,
+      dayScroll: state => state.trips.dayScroll,
     })
   },
   created() {
@@ -43,8 +44,11 @@ export default {
   mounted() {
 
   },
-  updated() {
-
+  watch: {
+    dayScroll() {
+      console.log(this.$refs[`day${this.dayScroll}`][0])
+      this.$refs[`day${this.dayScroll}`][0].$el.scrollIntoView({behavior: "smooth", inline: "nearest"})
+    }
   },
   methods: {
     ...mapMutations({
