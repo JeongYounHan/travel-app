@@ -85,7 +85,6 @@ export default {
           break;
         }
       }
-      console.log("전후", prev, next)
       // 전, 후 일정 order 값 기준으로 타겟 일정 order값 계산
       const targetSchedule = {
         id: cur,

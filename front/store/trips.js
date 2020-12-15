@@ -7,6 +7,7 @@ export const state = () => ({
     daySelected: {},
     daysTotal: 0,
     daySchedule: [],
+    dayScroll: 0,
 });
 
 export const mutations = {
@@ -33,6 +34,9 @@ export const mutations = {
     },
     SET_DAYSCHEDULE(state, payload) {
         state.daySchedule = payload
+    },
+    SET_DAYSCROLL(state, payload) {
+        state.dayScroll = payload
     },
 };
 

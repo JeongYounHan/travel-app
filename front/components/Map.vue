@@ -79,17 +79,19 @@ export default {
           latlng.push(temp)
 
           // 최대 최소 계산
-          // if (element.place.lat > maxLat) {
-          //   maxLat = element.place.lat
-          // } else if (element.place.lat < minLat) {
-          //   minLat = element.place.lat
-          // }
+          if (element.place.lat > maxLat) {
+            maxLat = element.place.lat
+          } 
+          if (element.place.lat < minLat) {
+            minLat = element.place.lat
+          }
 
-          // if (element.place.lng > maxLng) {
-          //   maxLng = element.place.lng
-          // } else if (element.place.lng < minLng) {
-          //   minLng = element.place.lng
-          // }
+          if (element.place.lng > maxLng) {
+            maxLng = element.place.lng
+          } 
+          if (element.place.lng < minLng) {
+            minLng = element.place.lng
+          }
         });
 
         // 중심 좌표 계산
@@ -101,38 +103,53 @@ export default {
           middleLat = 37.56664532365792
           middleLng = 126.97793969616743
         }
+        minLat = minLat - 0.1
+        minLng = minLng - 0.1
         console.log(minLat, minLng)
         console.log(maxLat, maxLng)
         // 옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성
         // 모든 점들 다 들어오게 하려면 바운더리 설정 필요
-        // let maxBoundary = new naver.maps.LatLngBounds(
-        //   new naver.maps.LatLng(minLat, minLng),
-        //   new naver.maps.LatLng(maxLat, maxLng)
-        // )
-        // if (latlng.length > 1) {
-        //   const map = new naver.maps.Map(mapDiv, {
-        //       // minZoom: 10,
-        //       // maxBounds: maxBoundary,
-        //       center: new naver.maps.LatLng(middleLat, middleLng)
-        //   })
-        // } else {
-        const map = new naver.maps.Map(mapDiv, {
-            zoom: 14,
-            center: new naver.maps.LatLng(middleLat, middleLng)
-        })
-        // }
+        let maxBoundary = new naver.maps.LatLngBounds(
+          new naver.maps.LatLng(minLat, minLng),
+          new naver.maps.LatLng(maxLat, maxLng)
+        )
         
-        // 마커찍기
-        const markerList = []
-        for (let i=0, ii=latlng.length; i<ii; i++) {
-            let marker = new naver.maps.Marker({
-                position: latlng[i],
-                map: map,           
-            });
+        if (latlng.length > 1) {
+          let map = new naver.maps.Map(mapDiv, {
+              zoom: 12,
+              maxBounds: maxBoundary,
+          })
 
-            marker.set('seq', i);
-            markerList.push(marker);
-        }      
+          // 마커찍기
+          let markerList = []
+          for (let i=0, ii=latlng.length; i<ii; i++) {
+              let marker = new naver.maps.Marker({
+                  position: latlng[i],
+                  map: map,           
+              });
+
+              marker.set('seq', i);
+              markerList.push(marker);
+          }   
+        } else {
+          let map2 = new naver.maps.Map(mapDiv, {
+              zoom: 13,
+              // maxBounds: maxBoundary
+              center: new naver.maps.LatLng(middleLat, middleLng)
+          })
+
+          // 마커찍기
+          let markerList2 = []
+          for (let i=0, ii=latlng.length; i<ii; i++) {
+              let marker2 = new naver.maps.Marker({
+                  position: latlng[i],
+                  map: map2,           
+              });
+
+              marker2.set('seq', i);
+              markerList2.push(marker2);
+          }   
+        }   
     }
   }
 }
@@ -141,7 +158,7 @@ export default {
 <style>
 #map {
     position: relative;
-    width: 100%;
+    margin-left: 300px;
     height: calc(100vh - 49px);
 }
 
@@ -152,7 +169,7 @@ export default {
 .daysNav {
     position: absolute;
     bottom: 10px;
-    left: 310px;
+    left: 290px;
     z-index: 2;
     border-radius: 5px;
 }

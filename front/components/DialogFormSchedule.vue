@@ -67,7 +67,6 @@ export default {
     },
     computed: {
         ...mapState({
-            daySelected: state => state.trips.daySelected,
             tripSelected: state => state.trips.tripSelected.id,
             placeList: state => state.trips.placeList
         }),
