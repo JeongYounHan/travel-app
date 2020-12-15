@@ -114,6 +114,7 @@ export const actions = {
         }, config)
             .then((res) => {
                 dispatch('FETCH_SCHEDULELIST', {trip: res.data.trip.id})
+                dispatch('FETCH_DAYSCHEDULE', {trip: res.data.trip.id, day: payload.day})
             }).catch((err) => {
                 console.log(err)
             })
@@ -143,8 +144,9 @@ export const actions = {
         }
 
         const day = payload.day || ''
-        this.$axios.get(`${BACK_URL}/schedules?trip=${payload.trip}&day=${day}`, config)
+        return this.$axios.get(`${BACK_URL}/schedules?trip=${payload.trip}&day=${day}`, config)
             .then((res) => {
+                console.log(res.data)
                 commit('SET_DAYSCHEDULE', res.data)
             }).catch((err) => {
                 console.log(err)

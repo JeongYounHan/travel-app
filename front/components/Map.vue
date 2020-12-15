@@ -40,8 +40,10 @@ export default {
       tripSelected: state => state.trips.tripSelected.id,
       daySchedule: state => state.trips.daySchedule
     }),
-    dailySchedule() {
-      return this.scheduleList.filter(v => v.day == this.day)
+  },
+  watch: {
+    daySchedule() {
+      this.fetchMap()
     }
   },
   mounted() {
@@ -52,25 +54,46 @@ export default {
       FETCH_DAYSCHEDULE: 'trips/FETCH_DAYSCHEDULE'
     }),
     async onClickDay(item) {
-        this.day = item
-        console.log(this.dailySchedule)
-        
         //데이터 받아오기
-        // const temp = await this.fetchDaySchedule(item)
-        //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정합니다.
-        const mapDiv = document.getElementById('map'); // 'map'으로 선언해도 동일
-        
+        const first = await this.FETCH_DAYSCHEDULE({trip: this.tripSelected, day: item})
+        // 지도 불러오기
+        const second = await this.fetchMap()
+    },
+    fetchMap() {
+        //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정 후
+        const mapDiv = document.getElementById('map') // 'map'으로 선언해도 동일
+
         let middleLat = 0
         let middleLng = 0
         let latlng = []
-        // 해당 장소들 좌표 뽑기
-        this.dailySchedule.forEach(element => {
+        let minLat = 100000
+        let maxLat = 0
+        let minLng = 100000
+        let maxLng = 0
+
+        // 선택된 날의 좌표 뽑기
+        this.daySchedule.forEach(element => {
           middleLat = middleLat + element.place.lat
           middleLng = middleLng + element.place.lng
           let temp = new naver.maps.LatLng(element.place.lat, element.place.lng)
           latlng.push(temp)
+
+          // 최대 최소 계산
+          // if (element.place.lat > maxLat) {
+          //   maxLat = element.place.lat
+          // } else if (element.place.lat < minLat) {
+          //   minLat = element.place.lat
+          // }
+
+          // if (element.place.lng > maxLng) {
+          //   maxLng = element.place.lng
+          // } else if (element.place.lng < minLng) {
+          //   minLng = element.place.lng
+          // }
         });
-        const tempLength = Object.keys(this.dailySchedule).length
+
+        // 중심 좌표 계산
+        const tempLength = Object.keys(this.daySchedule).length
         if (tempLength) {
           middleLat = middleLat / tempLength
           middleLng = middleLng / tempLength
@@ -78,15 +101,30 @@ export default {
           middleLat = 37.56664532365792
           middleLng = 126.97793969616743
         }
-        //옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성됩니다.
+        console.log(minLat, minLng)
+        console.log(maxLat, maxLng)
+        // 옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성
+        // 모든 점들 다 들어오게 하려면 바운더리 설정 필요
+        // let maxBoundary = new naver.maps.LatLngBounds(
+        //   new naver.maps.LatLng(minLat, minLng),
+        //   new naver.maps.LatLng(maxLat, maxLng)
+        // )
+        // if (latlng.length > 1) {
+        //   const map = new naver.maps.Map(mapDiv, {
+        //       // minZoom: 10,
+        //       // maxBounds: maxBoundary,
+        //       center: new naver.maps.LatLng(middleLat, middleLng)
+        //   })
+        // } else {
         const map = new naver.maps.Map(mapDiv, {
             zoom: 14,
             center: new naver.maps.LatLng(middleLat, middleLng)
-        });
-
+        })
+        // }
+        
+        // 마커찍기
         const markerList = []
         for (let i=0, ii=latlng.length; i<ii; i++) {
-
             let marker = new naver.maps.Marker({
                 position: latlng[i],
                 map: map,           
@@ -94,11 +132,7 @@ export default {
 
             marker.set('seq', i);
             markerList.push(marker);
-            // console.log(marker)
-        }
-    },
-    fetchDaySchedule(item) {
-      this.FETCH_DAYSCHEDULE({day: item, trip: this.tripSelected})
+        }      
     }
   }
 }

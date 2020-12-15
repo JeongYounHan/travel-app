@@ -119,7 +119,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .schedule__div {
   position: relative;
   text-align: left;
@@ -131,6 +131,7 @@ export default {
 .caption {
   margin: 0px;
   padding: 0px;
+
 }
 
 .schedule__delete {
@@ -147,8 +148,33 @@ export default {
 .handle {
   color: grey;
   position: absolute;
-  top: 55%;
-  left: 176px;
+  top: 60%;
+  left: 182px;
   font-size: 15px;
 }
+
+/* 드래그 시, 정렬된 상태로 드래그 하려고 */
+
+.v-timeline--dense .v-timeline-item:nth-child(odd):not(.v-timeline-item--right), .v-timeline--dense .v-timeline-item--left {
+  flex-direction: row;
+}
+
+.v-timeline-item__dot{
+  position: static;
+  margin: 0 25px 0 7px;
+}
+
+.v-timeline-item__body {
+  max-width: 100% !important;
+}
+
+/* 드래그 시, 위에 떠있는 부분 */
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8 !important;
+}
+
+
 </style>
