@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import DialogForm from '../components/DialogForm'
 
 export default {
@@ -59,7 +59,7 @@ export default {
   computed: {
     ...mapState({
       me: state => state.users.me,
-      trips: state => state.trips.trips
+      trips: state => state.trips.trips,
     })
   },
   created() {
@@ -69,10 +69,10 @@ export default {
   },
   methods: {
       ...mapActions({
-          FETCH_TRIPLIST: 'trips/FETCH_TRIPLIST',
-          FETCH_CITYLIST: 'trips/FETCH_CITYLIST',
-          FETCH_PLACELIST: 'trips/FETCH_PLACELIST'
-      })
+        FETCH_TRIPLIST: 'trips/FETCH_TRIPLIST',
+        FETCH_CITYLIST: 'trips/FETCH_CITYLIST',
+        FETCH_PLACELIST: 'trips/FETCH_PLACELIST'
+      }),
   },
   middleware: 'authenticated',
 }

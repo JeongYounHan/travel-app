@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 export const state = () => ({
     me: null,
     token: null,
@@ -26,6 +27,11 @@ export const mutations = {
 const BACK_URL = 'http://localhost:8000/rest-auth'
 
 export const actions = {
+    nuxtServerInit ({ commit }, { app }) {
+        const token = app.$cookies.get('token')
+        console.log(token)
+        commit('LOGIN', token)
+    },
     LOGIN({ commit }, payload) {
         this.$axios.post(`${BACK_URL}/login/`, {
             username: payload.username,
@@ -65,3 +71,6 @@ export const actions = {
             });
     } 
 };
+
+
+

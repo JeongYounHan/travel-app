@@ -46,15 +46,15 @@ export default {
 
   computed: {},
   created() {
-    // this.checkToken()
+    // this.getToken()
   },
   mounted() {},
   updated() {
-    // this.checkToken()
+
   },
   methods: {
     ...mapMutations({
-      // SET_ME: 'users/SET_ME'
+      LOGINM: 'users/LOGIN'
     }),
     ...mapActions({
       LOGIN: 'users/LOGIN'
@@ -62,12 +62,13 @@ export default {
     onSubmit() {
       this.LOGIN({username: this.username, password: this.password})
     },
-    checkToken() {
-      const token = this.$cookies.get('token')
-      if (token) {
-        this.$store.commit('users/LOGIN', token)
-      }
-    }
+    // getToken(token){
+    //   if(process.browser){
+    //     const token = localStorage.getItem("token")
+    //     console.log(token)
+    //     this.LOGINM(token)
+    //   }
+    // }
   },
   middleware: 'anonymous',
 }
