@@ -46,7 +46,6 @@ export default {
   },
   watch: {
     dayScroll() {
-      console.log(this.$refs[`day${this.dayScroll}`][0])
       this.$refs[`day${this.dayScroll}`][0].$el.scrollIntoView({behavior: "smooth", inline: "nearest"})
     }
   },

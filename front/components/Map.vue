@@ -12,7 +12,7 @@
             :key="item"
             link
           >
-            <v-chip class="ma-1" small @click.prevent="onClickChip(item)" @click="onClickDay(item)">
+            <v-chip class="ma-1" small @click.prevent="onClickChip(item)">
                 day {{item}}
             </v-chip>
           </span>
@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted() {
-      this.onClickDay(1)
+      this.onDayChange(1)
   },
   methods: {
     ...mapMutations({
@@ -59,11 +59,13 @@ export default {
     ...mapActions({
       FETCH_DAYSCHEDULE: 'trips/FETCH_DAYSCHEDULE'
     }),
-    async onClickDay(item) {
+    onClickChip(item) {
+      this.SET_DAYSCROLL(item)
+      this.onDayChange(item)
+    },
+    onDayChange(item) {
         //데이터 받아오기
-        const first = await this.FETCH_DAYSCHEDULE({trip: this.tripSelected, day: item})
-        // 지도 불러오기
-        const second = await this.fetchMap()
+        this.FETCH_DAYSCHEDULE({trip: this.tripSelected, day: item})
     },
     fetchMap() {
         //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정 후
@@ -77,8 +79,13 @@ export default {
         let minLng = 100000
         let maxLng = 0
 
+        // daySchedule을 order 값 기준으로 sort 해야
+        let dayScheduleInOrder = [...this.daySchedule]
+        dayScheduleInOrder.sort((a,b) => {
+          return a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+        })
         // 선택된 날의 좌표 뽑기
-        this.daySchedule.forEach(element => {
+        dayScheduleInOrder.forEach(element => {
           middleLat = middleLat + element.place.lat
           middleLng = middleLng + element.place.lng
           let temp = new naver.maps.LatLng(element.place.lat, element.place.lng)
@@ -101,7 +108,7 @@ export default {
         });
 
         // 중심 좌표 계산
-        const tempLength = Object.keys(this.daySchedule).length
+        const tempLength = Object.keys(dayScheduleInOrder).length
         if (tempLength) {
           middleLat = middleLat / tempLength
           middleLng = middleLng / tempLength
@@ -132,9 +139,16 @@ export default {
                   map: map,           
               });
 
-              marker.set('seq', i);
-              markerList.push(marker);
-          }   
+              marker.set('seq', i)
+              markerList.push(marker)
+          }  
+
+          // 폴리라인 찍기
+          let polyline = new naver.maps.Polyline({
+            map: map,
+            path: latlng
+          })
+
         } else {
           let map2 = new naver.maps.Map(mapDiv, {
               zoom: 13,
@@ -150,14 +164,11 @@ export default {
                   map: map2,           
               });
 
-              marker2.set('seq', i);
-              markerList2.push(marker2);
+              // marker2.set('seq', i);
+              // markerList2.push(marker2);
           }   
         }   
     },
-    onClickChip(item) {
-      this.SET_DAYSCROLL(item)
-    }
   }
 }
 </script>
