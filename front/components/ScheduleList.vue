@@ -104,9 +104,6 @@ export default {
 
       // 수정해주어야
       this.UPDATE_SCHEDULE(targetSchedule)
-
-      // 순서 바뀐것 알려주어야
-      // this.SET_CHANGEINORDER(!this.changeInOrder)
     });
   },
   updated() {

@@ -14,7 +14,7 @@
           <v-timeline-item color="blue darken-2" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name }}</strong>
-              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete({id: schedule.id, trip: schedule.trip.id, day: schedule.day})">&times;</a>
             </div>
             <small>{{ schedule.place.time }}</small>
             <p class="caption">
@@ -35,7 +35,7 @@
           <v-timeline-item color="pink" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name }}</strong>
-              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete({id: schedule.id, trip: schedule.trip.id, day: schedule.day})">&times;</a>
             </div>
             <small>숙소</small>
             <p class="caption">
@@ -52,7 +52,7 @@
           <v-timeline-item color="teal" small v-if="schedule">
             <div class="schedule__delete">
               <strong>{{ schedule.place.name}}</strong>
-              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete">&times;</a>
+              <a href="" class="schedule__delete__btn" @click.prevent.stop="onDelete({id: schedule.id, trip: schedule.trip.id, day: schedule.day})">&times;</a>
             </div>
             <small>관광명소</small>
             <p class="caption">
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 
 export default {
   props: ['schedule'],
@@ -110,9 +111,12 @@ export default {
     }
   },
   methods: {
-    onDelete() {
-      if (!window.confirm(`${this.schedule.place.name} 일정을 삭제하시겠습니까?`)) {
-        console.log(111111)
+    ...mapActions({
+      DELETE_SCHEDULE: 'trips/DELETE_SCHEDULE'
+    }),
+    onDelete(payload) {
+      if (window.confirm(`${this.schedule.place.name} 일정을 삭제하시겠습니까?`)) {
+        this.DELETE_SCHEDULE({trip: payload.trip, day: payload.day, id: payload.id})
       }
     }
   }

@@ -1,14 +1,12 @@
-# 여행지 경로짜기
+# Traverse(여행지 경로짜기)
 
 ## 목차
 
 - [개요](#개요)
 
-- 기능
+- [기능](#기능)
 
-- 향후 전망
-
-- nuxt개념
+- [nuxt개념](#nuxt개념)
 
   
 
@@ -36,14 +34,14 @@
 
 #### 역할 및 기여도
 
-- 팀원: 혼자
+- 프론트엔드, 백엔드
 
 
 
 #### 기술 스택
 
-- 프론트: vue, vuex, nuxt, vuetify
-- 백: django
+- 프론트엔드: nuxt (vue, vuex), vuetify
+- 백엔드: django
 
 
 
@@ -88,6 +86,188 @@
 
 4. 여행 경로 페이지
 
+   - 일정: 일정 CRUD, 드래그 앤 드롭으로 일정 순서 와 지도상의 경로 변경 가능
+
+     ```javascript
+     mounted() {
+         // 드래그 앤 드롭
+         const { from } = this.$refs;
+         dragula([from], {
+             revertOnSpill: true,
+             moves: function (el, container, handle) {
+                 return handle.classList.contains('handle');
+             }
+         }).on('drop', (el, target) => {
+             // 옮긴 객체 id
+             const cur = parseInt(el.getElementsByClassName('schedule__div')[0].dataset['scheduleId'])
+     
+             // 전, 후 찾기
+             let prev = null
+             let next = null
+             const candidates = Array.from(target.querySelectorAll('.schedule__div'))
+     
+             for (let i = 0; i < candidates.length; i++) {
+                 const id = parseInt(candidates[i].dataset['scheduleId'])
+                 if (id === cur) {
+                     if (i > 0) {
+                         prev = candidates[i-1]
+                     }
+                     if (i < candidates.length - 1) {
+                         next = candidates[i+1]
+                     }
+                     break;
+                 }
+             }
+             // 전, 후 일정 order 값 기준으로 타겟 일정 order값 계산
+             const targetSchedule = {
+                 id: cur,
+                 order: 0,
+                 day: el.getElementsByClassName('schedule__div')[0].dataset['scheduleDay']
+             }
+     
+             if (!prev && next) {
+                 targetSchedule.order = parseFloat(next.dataset['scheduleOrder']) - 1
+             }
+             else if (!next && prev) {
+                 targetSchedule.order = parseFloat(prev.dataset['scheduleOrder']) + 1
+             } 
+             else if (prev && next) {
+                 targetSchedule.order = (parseFloat(prev.dataset['scheduleOrder']) + parseFloat(next.dataset['scheduleOrder'])) / 2 
+             } 
+     
+             // 수정해주어야
+             this.UPDATE_SCHEDULE(targetSchedule)
+         });
+     ```
+
+     
+
+   - 지도: 하단의 NavBar에서 날짜를 선택하면 해당 날짜의 여행 경로 표현
+
+     ```javascript
+     fetchMap() {
+         //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정 후
+         const mapDiv = document.getElementById('map') // 'map'으로 선언해도 동일
+     
+         let middleLat = 0
+         let middleLng = 0
+         let latlng = []
+         let minLat = 100000
+         let maxLat = 0
+         let minLng = 100000
+         let maxLng = 0
+     
+         // daySchedule을 order 값 기준으로 sort 해야
+         let dayScheduleInOrder = [...this.daySchedule]
+         dayScheduleInOrder.sort((a,b) => {
+             return a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+         })
+         // 선택된 날의 좌표 뽑기
+         dayScheduleInOrder.forEach(element => {
+             middleLat = middleLat + element.place.lat
+             middleLng = middleLng + element.place.lng
+             let temp = new naver.maps.LatLng(element.place.lat, element.place.lng)
+             latlng.push(temp)
+     
+             // 최대 최소 계산
+             if (element.place.lat > maxLat) {
+                 maxLat = element.place.lat
+             } 
+             if (element.place.lat < minLat) {
+                 minLat = element.place.lat
+             }
+     
+             if (element.place.lng > maxLng) {
+                 maxLng = element.place.lng
+             } 
+             if (element.place.lng < minLng) {
+                 minLng = element.place.lng
+             }
+         });
+     
+         // 중심 좌표 계산
+         const tempLength = Object.keys(dayScheduleInOrder).length
+         if (tempLength) {
+             middleLat = middleLat / tempLength
+             middleLng = middleLng / tempLength
+         } else {
+             middleLat = 37.56664532365792
+             middleLng = 126.97793969616743
+         }
+         minLat = minLat - 0.1
+         minLng = minLng - 0.1
+         // 옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성
+         // 모든 점들 다 들어오게 하려면 바운더리 설정 필요
+         let maxBoundary = new naver.maps.LatLngBounds(
+             new naver.maps.LatLng(minLat, minLng),
+             new naver.maps.LatLng(maxLat, maxLng)
+         )
+     
+         if (latlng.length > 1) {
+             let map = new naver.maps.Map(mapDiv, {
+                 zoom: 12,
+                 maxBounds: maxBoundary,
+             })
+     
+             // 마커찍기
+             let markerList = []
+             for (let i=0, ii=latlng.length; i<ii; i++) {
+                 let marker = new naver.maps.Marker({
+                     position: latlng[i],
+                     map: map,           
+                 });
+     
+                 marker.set('seq', i)
+                 markerList.push(marker)
+             }  
+     
+             // 폴리라인 찍기
+             let polyline = new naver.maps.Polyline({
+                 map: map,
+                 path: latlng
+             })
+     
+             } else {
+                 let map2 = new naver.maps.Map(mapDiv, {
+                     zoom: 13,
+                     // maxBounds: maxBoundary
+                     center: new naver.maps.LatLng(middleLat, middleLng)
+                 })
+     
+                 // 마커찍기
+                 let markerList2 = []
+                 for (let i=0, ii=latlng.length; i<ii; i++) {
+                     let marker2 = new naver.maps.Marker({
+                         position: latlng[i],
+                         map: map2,           
+                     });
+     
+                     // marker2.set('seq', i);
+                     // markerList2.push(marker2);
+                 }   
+             }   
+     },
+     ```
+
+     
+
+   - 하단의 NavBar와 왼편의 Drawer 이동 연동
+
+     ```javascript
+     // store state의 dayScroll 
+     watch: {
+         dayScroll() {
+             this.$refs[`day${this.dayScroll}`][0].$el.scrollIntoView({behavior: "smooth", inline: "nearest"})
+         }
+     },
+     ```
+
+     
+
+![image-20201217225831413](README.assets/image-20201217225831413.png)
+
+![image-20201217225922600](README.assets/image-20201217225922600.png)
+
 
 
 5. 여행지 검색
@@ -108,7 +288,7 @@
 
      
 
-   - 검색 결과: 검색에 따라 ajax 요청
+   - 여행지 검색 결과: 검색에 따라 ajax 요청
 
      ```javascript
      onClickSearch() {

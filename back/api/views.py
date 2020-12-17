@@ -23,10 +23,10 @@ from rest_framework.exceptions import NotAuthenticated, NotFound, ValidationErro
 
 
 # 페이지네이션
-class SmallPagination(PageNumberPagination):
-    page_size = 8
-    page_size_query_param = "page_size"
-    max_page_size = 80
+# class SmallPagination(PageNumberPagination):
+#     page_size = 8
+#     page_size_query_param = "page_size"
+#     max_page_size = 80
 
 
 class CityViewSet(viewsets.ModelViewSet):
@@ -54,7 +54,7 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
 class TripViewSet(viewsets.ModelViewSet):
     serializer_class = TripSerializer
-    pagination_class = SmallPagination
+    # pagination_class = SmallPagination
     queryset = Trip.objects.all()
 
     def list(self, request, *args, **kwargs):

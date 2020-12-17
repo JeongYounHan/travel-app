@@ -2,13 +2,12 @@ export const state = () => ({
     placeList: [],
     cities: [],
     trips: [],
-    tripSelected: {},
-    scheduleList: [],
-    daySelected: {},
+    tripSelected: {}, // 선택된 여행
+    scheduleList: [], // 선택된 trip의 전체 일정들
+    daySelected: {}, // 선택된 day
     daysTotal: 0,
-    daySchedule: [],
-    dayScroll: 1,
-    // changeInOrder: false,
+    daySchedule: [], // 선택된 day의 일정들
+    dayScroll: 1, 
 });
 
 export const mutations = {
@@ -39,9 +38,6 @@ export const mutations = {
     SET_DAYSCROLL(state, payload) {
         state.dayScroll = payload
     },
-    // SET_CHANGEINORDER(state, payload) {
-    //     state.changeInOrder = payload
-    // },
 };
 
 const BACK_URL = 'http://localhost:8000/api'
@@ -141,6 +137,20 @@ export const actions = {
         }, config)
             .then((res) => {
                 dispatch('FETCH_SCHEDULELIST', {trip: res.data.trip.id})
+            }).catch((err) => {
+                console.log(err)
+            })
+    },
+    DELETE_SCHEDULE({dispatch, rootState}, payload) {
+        const config = {
+            headers: {
+                Authorization: 'Token ' + rootState.users.token
+            }
+        }
+        this.$axios.delete(`${BACK_URL}/schedules/${payload.id}`,{}, config)
+            .then(() => {
+                dispatch('FETCH_SCHEDULELIST', {trip: payload.trip})
+                dispatch('FETCH_DAYSCHEDULE', {trip: payload.trip, day: payload.day})
             }).catch((err) => {
                 console.log(err)
             })
