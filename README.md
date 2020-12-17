@@ -16,7 +16,7 @@
 
 #### 기간
 
-2020.12.08 ~ 2020.12.16(?) 지속 수정 가능
+2020.12.08 ~ 2020.12.16(?) 수정 가능
 
 
 
@@ -24,7 +24,7 @@
 
 - 여러 여행지를 여행할 때, 지도상에서 경로를 확인하고 여행지 여행 순서 수정 가능하게 하는 반응형 웹 구현 
 
-- nuxt.js 사용한 프로젝트 진행 경험
+- nuxt.js 사용에 익숙해지고, 검색 최적화를 고려한 프로젝트 경험 쌓기
 
 
 
@@ -37,7 +37,6 @@
 #### 역할 및 기여도
 
 - 팀원: 혼자
-- 기여도: 100%
 
 
 
@@ -52,19 +51,112 @@
 
 1. 로그인 & 회원가입 페이지
 
+   - middleware 사용: 로그인 하지 않으면 다른페이지 접속 시 로그인 창으로 이동(검색 페이지 제외)
+
+     ```javascript
+     // middleware/authenticated.js
+     export default function({ store, redirect }) {
+         if (!store.state.users.token) {
+             redirect('/login');
+         }
+     }
+     
+     // 다른 페이지들
+     middleware: 'authenticated',
+     ```
+
+![image-20201217164450400](README.assets/image-20201217164450400.png)
+
 
 
 2. 메인페이지
+   - 여행지 검색 기능
+   - 사용자의 여행 목록
+   - 새 여행 추가 기능
+
+![image-20201217164930596](README.assets/image-20201217164930596.png)
+
+![image-20201217164952242](README.assets/image-20201217164952242.png)
 
 
 
-3. 검색페이지
+3. 여행 추가 모달 창
+
+![image-20201217165559562](README.assets/image-20201217165559562.png)
 
 
 
 4. 여행 경로 페이지
 
 
+
+5. 여행지 검색
+
+   - 전체 도시 목록: asyncData로 ssr 도입
+
+     ```javascript
+     async asyncData({ $axios }) {
+         try {
+             let temp = await $axios.$get(`http://localhost:8000/api/cities`)
+             let cityList = temp.results
+             return { cityList }
+         } catch (err) {
+             return { cityList: [] }
+         }
+     },
+     ```
+
+     
+
+   - 검색 결과: 검색에 따라 ajax 요청
+
+     ```javascript
+     onClickSearch() {
+         const keyword = this.keyword.trim()
+         if (keyword) {
+             this.FETCH_CITYLIST({keyword: keyword})
+             this.$router.push({ path: 'search', query: { search: keyword }})
+         }
+     },
+     ```
+
+     
+
+![image-20201217165835808](README.assets/image-20201217165835808.png)
+
+
+
+6. 여행지 장소 목록 페이지
+
+   - asyncData 사용
+
+     ```javascript
+     async asyncData({ $axios, params }) {
+         try {
+             let temp = await $axios.$get(`http://localhost:8000/api/places?city=${params.cityId}`)
+             let placeList = temp.results
+             return { placeList }
+         } catch (err) {
+             return { placeList: [] }
+         }
+     },
+     ```
+
+     
+
+   - head 사용: 타이틀 수정
+
+     ```javascript
+     head() {
+         return {
+             title: this.placeList[0].city
+         };
+     },
+     ```
+
+     
+
+![image-20201217170043976](README.assets/image-20201217170043976.png)
 
 
 

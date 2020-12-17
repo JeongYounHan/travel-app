@@ -45,6 +45,12 @@ class PlaceViewSet(viewsets.ModelViewSet):
     serializer_class = PlaceSerializer
     queryset = Place.objects.all()
 
+    # 키워드 검색
+    filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
+
+    # 장르로 필터
+    filterset_fields = ['city']
+
 
 class TripViewSet(viewsets.ModelViewSet):
     serializer_class = TripSerializer

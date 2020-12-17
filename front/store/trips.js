@@ -43,16 +43,18 @@ export const mutations = {
 const BACK_URL = 'http://localhost:8000/api'
 
 export const actions = {
-    FETCH_CITYLIST({commit}) {
-        this.$axios.get(`${BACK_URL}/cities`)
+    FETCH_CITYLIST({commit}, payload) {
+        const keyword = payload.keyword || ''
+        this.$axios.get(`${BACK_URL}/cities?search=${keyword}`)
             .then((res) => {
                 commit('SET_CITYLIST', res.data.results)
             }).catch((err) => {
                 console.log(err)
             })
     },
-    FETCH_PLACELIST({commit}) {
-        this.$axios.get(`${BACK_URL}/places`)
+    FETCH_PLACELIST({commit}, payload) {
+        const cityId = payload.cityId || ''
+        this.$axios.get(`${BACK_URL}/places?city=${cityId}`)
             .then((res) => {
                 commit('SET_PLACE', res.data.results)
             }).catch((err) => {

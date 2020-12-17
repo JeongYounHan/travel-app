@@ -11,9 +11,10 @@
         <div class="search__container">
           <input
             class="search__form"
-            placeholder="검색"
+            placeholder="어느 도시가 궁금하세요?"
+            v-model="keyword"
           />
-          <button>SEARCH</button>
+          <button @click="onClickSearch">SEARCH</button>
         </div>
       </div>
       </v-img>
@@ -62,10 +63,15 @@ export default {
       trips: state => state.trips.trips,
     })
   },
+  data() {
+    return {
+      keyword: '',
+    }
+  },
   created() {
     this.FETCH_TRIPLIST()
-    this.FETCH_CITYLIST()
-    this.FETCH_PLACELIST()
+    this.FETCH_CITYLIST({keyword: ''})
+    this.FETCH_PLACELIST({cityId: ''})
   },
   methods: {
       ...mapActions({
@@ -73,6 +79,13 @@ export default {
         FETCH_CITYLIST: 'trips/FETCH_CITYLIST',
         FETCH_PLACELIST: 'trips/FETCH_PLACELIST'
       }),
+      onClickSearch() {
+        const keyword = this.keyword.trim()
+        if (keyword) {
+          this.FETCH_CITYLIST({keyword: keyword})
+          this.$router.push({ path: 'search', query: { search: keyword }})
+        }
+      }
   },
   middleware: 'authenticated',
 }
@@ -125,6 +138,15 @@ button {
   color: white;
   padding: 6px 5px;
   display: inline;
+}
+
+button:focus {
+  outline: none;
+}
+
+input:focus {
+  background: rgb(229, 240, 239);
+  outline: none;
 }
 
 @media screen and (max-width: 768px) {
