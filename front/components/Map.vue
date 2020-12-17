@@ -12,7 +12,7 @@
             :key="item"
             link
           >
-            <v-chip class="ma-1" small @click.prevent="onClickChip(item)">
+            <v-chip class="ma-1" small @click.prevent="day = item">
                 day {{item}}
             </v-chip>
           </span>
@@ -38,15 +38,28 @@ export default {
       scheduleList: state => state.trips.scheduleList,
       daysTotal: state => state.trips.daysTotal,
       tripSelected: state => state.trips.tripSelected.id,
-      daySchedule: state => state.trips.daySchedule
+      daySchedule: state => state.trips.daySchedule,
+      // changeInOrder: state => state.trips.changeInOrder
     }),
   },
   watch: {
+    // 새로 장소 추가하면 그 변경 감지하기 위해
     daySchedule: {
       deep: true,
       handler() {
         this.fetchMap()
       }
+    },
+    // scheduleList에서 드래그앤 드롭 변경 감지하기 위해
+    scheduleList: {
+      deep: true,
+      handler() {
+        this.onDayChange(this.day)
+      }      
+    },
+    // day bar의 변경 감지하기 위해
+    day() {
+      this.onClickChip(this.day)
     }
   },
   mounted() {

@@ -8,6 +8,7 @@ export const state = () => ({
     daysTotal: 0,
     daySchedule: [],
     dayScroll: 1,
+    // changeInOrder: false,
 });
 
 export const mutations = {
@@ -38,6 +39,9 @@ export const mutations = {
     SET_DAYSCROLL(state, payload) {
         state.dayScroll = payload
     },
+    // SET_CHANGEINORDER(state, payload) {
+    //     state.changeInOrder = payload
+    // },
 };
 
 const BACK_URL = 'http://localhost:8000/api'

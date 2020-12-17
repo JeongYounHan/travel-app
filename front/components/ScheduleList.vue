@@ -10,13 +10,12 @@
             :schedule="schedule"
           />
         </div>
-
       </v-timeline>
       <div class="btnList">
         <DialogFormSchedule :dayEach="day" :daySchedule="daySchedule"></DialogFormSchedule>
         <DialogFormTodo :dayEach="day"></DialogFormTodo>
       </div>
-      <div ref="to"></div>
+
     </v-card>
   </div>
 </template>
@@ -41,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      
+      changeInOrder: state => state.trips.changeInOrder
     }),
     daySchedule() {
       let temp = this.$store.state.trips.scheduleList.filter(v => v.day == this.day)
@@ -57,12 +56,9 @@ export default {
       })
     }
   },
-
-  created() {
-  },
   mounted() {
     // 드래그 앤 드롭
-    const { from, to } = this.$refs;
+    const { from } = this.$refs;
     dragula([from], {
       revertOnSpill: true,
       moves: function (el, container, handle) {
@@ -108,6 +104,9 @@ export default {
 
       // 수정해주어야
       this.UPDATE_SCHEDULE(targetSchedule)
+
+      // 순서 바뀐것 알려주어야
+      // this.SET_CHANGEINORDER(!this.changeInOrder)
     });
   },
   updated() {
@@ -115,7 +114,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      SET_DAY: 'trips/SET_DAY'
+      SET_DAY: 'trips/SET_DAY',
+      SET_CHANGEINORDER: 'trips/SET_CHANGEINORDER'
     }),
     ...mapActions({
       UPDATE_SCHEDULE: 'trips/UPDATE_SCHEDULE'
