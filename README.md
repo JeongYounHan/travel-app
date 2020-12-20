@@ -147,7 +147,7 @@
      ```javascript
      fetchMap() {
          //지도를 삽입할 HTML 요소 또는 HTML 요소의 id를 지정 후
-         const mapDiv = document.getElementById('map') // 'map'으로 선언해도 동일
+         const mapDiv = document.getElementById('map') 
      
          let middleLat = 0
          let middleLng = 0
@@ -162,21 +162,20 @@
          dayScheduleInOrder.sort((a,b) => {
              return a.order < b.order ? -1 : a.order > b.order ? 1 : 0
          })
-         // 선택된 날의 좌표 뽑기
+         // 좌표 뽑기
          dayScheduleInOrder.forEach(element => {
              middleLat = middleLat + element.place.lat
              middleLng = middleLng + element.place.lng
              let temp = new naver.maps.LatLng(element.place.lat, element.place.lng)
              latlng.push(temp)
      
-             // 최대 최소 계산
+             // 최대 최소 계산(바운더리 설정 위해)
              if (element.place.lat > maxLat) {
                  maxLat = element.place.lat
              } 
              if (element.place.lat < minLat) {
                  minLat = element.place.lat
              }
-     
              if (element.place.lng > maxLng) {
                  maxLng = element.place.lng
              } 
@@ -194,15 +193,13 @@
              middleLat = 37.56664532365792
              middleLng = 126.97793969616743
          }
-         minLat = minLat - 0.1
-         minLng = minLng - 0.1
          // 옵션 없이 지도 객체를 생성하면 서울 시청을 중심으로 하는 16 레벨의 지도가 생성
          // 모든 점들 다 들어오게 하려면 바운더리 설정 필요
          let maxBoundary = new naver.maps.LatLngBounds(
              new naver.maps.LatLng(minLat, minLng),
              new naver.maps.LatLng(maxLat, maxLng)
          )
-     
+     	// 점이 하나 이상이면
          if (latlng.length > 1) {
              let map = new naver.maps.Map(mapDiv, {
                  zoom: 12,
@@ -221,12 +218,12 @@
                  markerList.push(marker)
              }  
      
-             // 폴리라인 찍기
+             // 폴리라인 찍기(경로)
              let polyline = new naver.maps.Polyline({
                  map: map,
                  path: latlng
              })
-     
+     		// 점이 하나인 경우
              } else {
                  let map2 = new naver.maps.Map(mapDiv, {
                      zoom: 13,
@@ -241,27 +238,24 @@
                          position: latlng[i],
                          map: map2,           
                      });
-     
-                     // marker2.set('seq', i);
-                     // markerList2.push(marker2);
                  }   
              }   
      },
      ```
-
      
-
+     
+     
    - 하단의 NavBar와 왼편의 Drawer 이동 연동
-
+   
      ```javascript
-     // store state의 dayScroll 
+  // store state의 dayScroll 
      watch: {
-         dayScroll() {
+      dayScroll() {
              this.$refs[`day${this.dayScroll}`][0].$el.scrollIntoView({behavior: "smooth", inline: "nearest"})
-         }
+      }
      },
      ```
-
+   
      
 
 ![image-20201217225831413](README.assets/image-20201217225831413.png)
