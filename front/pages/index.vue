@@ -15,6 +15,7 @@
             v-model="keyword"
           />
           <button @click="onClickSearch">SEARCH</button>
+          <!-- <a href="http://localhost:3000/search">temp</a> -->
         </div>
       </div>
       </v-img>
